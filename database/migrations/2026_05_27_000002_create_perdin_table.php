@@ -12,15 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('perdin', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('kota_asal_id')->constrained('kota')->onDelete('cascade');
-            $table->foreignId('kota_tujuan_id')->constrained('kota')->onDelete('cascade');
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('kota_asal_id');
+            $table->unsignedInteger('kota_tujuan_id');
             $table->date('tanggal_berangkat');
             $table->date('tanggal_pulang');
             $table->text('keterangan');
             $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kota_asal_id')->references('id')->on('kota')->onDelete('cascade');
+            $table->foreign('kota_tujuan_id')->references('id')->on('kota')->onDelete('cascade');
         });
     }
 

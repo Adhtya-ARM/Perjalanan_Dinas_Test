@@ -83,6 +83,10 @@ class Perdin extends Model
             return 0;
         }
 
+        if ($berangkat->equalTo($pulang)) {
+            return 1;
+        }
+
         return $berangkat->diffInDays($pulang);
     }
 

@@ -55,12 +55,11 @@ class PerdinController extends Controller
 
         $request->validate([
             'kota_asal_id' => ['required', 'exists:kota,id'],
-            'kota_tujuan_id' => ['required', 'exists:kota,id', 'different:kota_asal_id'],
+            'kota_tujuan_id' => ['required', 'exists:kota,id'],
             'tanggal_berangkat' => ['required', 'date'],
             'tanggal_pulang' => ['required', 'date', 'after_or_equal:tanggal_berangkat'],
             'keterangan' => ['required', 'string', 'max:1000'],
         ], [
-            'kota_tujuan_id.different' => 'Kota tujuan tidak boleh sama dengan kota asal.',
             'tanggal_pulang.after_or_equal' => 'Tanggal pulang tidak boleh sebelum tanggal berangkat.',
         ]);
         $overlap = Perdin::where('user_id', $user->id)

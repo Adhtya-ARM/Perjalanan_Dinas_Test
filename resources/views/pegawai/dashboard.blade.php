@@ -88,9 +88,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="jsErrorAlert" class="alert alert-danger d-flex align-items-center gap-2" style="display: none;">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <span id="jsErrorMessage"></span>
+                    <div class="alert alert-danger align-items-center" id="jsErrorAlert" style="display: none;">
+                        <div class="small"><i class="bi bi-exclamation-circle me-1"></i><span id="jsErrorMessage"></span></div>
                     </div>
 
                     @if($errors->any())
@@ -123,6 +122,10 @@
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="alert alert-warning py-2 mb-3" id="sameCityNotice" style="display: none;">
+                        <div class="small fw-semibold"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kota asal dan tujuan sama. Perjalanan dinas ini tidak mendapatkan uang saku (Rp 0).</div>
                     </div>
 
                     <div class="row g-3 mb-3">
@@ -224,13 +227,6 @@
 
             errorAlert.style.display = 'none';
 
-            if (asal && tujuan && asal === tujuan) {
-                e.preventDefault();
-                errorMessage.textContent = 'Kota tujuan tidak boleh sama dengan kota asal.';
-                errorAlert.style.display = 'flex';
-                return;
-            }
-
             if (tglBerangkat && tglPulang) {
                 if (new Date(tglPulang) < new Date(tglBerangkat)) {
                     e.preventDefault();
@@ -240,6 +236,24 @@
                 }
             }
         });
+
+        var asalSelect = document.getElementById('kota_asal_id');
+        var tujuanSelect = document.getElementById('kota_tujuan_id');
+        var sameCityNotice = document.getElementById('sameCityNotice');
+
+        function checkSameCity() {
+            var asal = asalSelect.value;
+            var tujuan = tujuanSelect.value;
+            if (asal && tujuan && asal === tujuan) {
+                sameCityNotice.style.display = 'block';
+            } else {
+                sameCityNotice.style.display = 'none';
+            }
+        }
+
+        asalSelect.addEventListener('change', checkSameCity);
+        tujuanSelect.addEventListener('change', checkSameCity);
+        checkSameCity();
 
         @if($errors->any())
             var tambahModal = new bootstrap.Modal(document.getElementById('tambahModal'));
